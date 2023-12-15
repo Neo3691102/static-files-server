@@ -1,6 +1,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
+var mime = require('mime-types') // para los myme types
  
 const publicDirectory = path.join(__dirname, "..", "public");
  
@@ -25,25 +26,8 @@ const server = http.createServer((req, res) => {
     
   const ext = path.extname(filePath);  //obtenemos la extension del archivo
   
-  let contentType = "text/html";  //El MIME Type que estamos usando (valor de la cabecera "Content-Type")
-  // siempre es "text/html" pero es posible servir toda clase de archivos. 
-  //Agreguemos soporte a por lo menos las siguientes extensiones: .html, .css, .js, .jpg y jpeg.
+  let contentType = mime.lookup(ext) //obtenemos el mime type del archivo
  
-  switch (ext) {
-    case ".css": {
-      contentType = "text/css";
-      break;
-    }
-    case ".js": {
-      contentType = "text/javascript";
-      break;
-    }
-    case ".jpg":
-    case ".jpeg": {
-      contentType = "image/jpeg";
-      break;
-    }
-  }
  
   fs.readFile(filePath, (err, content) => {
     if (err) {
